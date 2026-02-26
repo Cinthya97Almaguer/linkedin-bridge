@@ -10,14 +10,17 @@
         const code = urlParams.get('code');
         const state = urlParams.get('state');
         const error = urlParams.get('error');
-        const authType = urlParams.get('auth_type') || 'register';
+        const authType = urlParams.get('auth_type') || 'REGISTER';
         
-        const hostname = window.location.hostname;
+        const flavor = urlParams.get('flavor') || 'professional';
+        
         let scheme = 'rezuapp://';
-        
-        if (hostname.includes('user')) {
+        if (flavor === 'user') {
             scheme = 'rezuappuser://';
         }
+        
+        console.log("Flavor detectado:", flavor);
+        console.log("Scheme usado:", scheme);
         
         if (code) {
             window.location.href = scheme + 'callback?code=' + code + 
