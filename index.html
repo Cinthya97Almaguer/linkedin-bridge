@@ -12,7 +12,14 @@
         const error = urlParams.get('error');
         const authType = urlParams.get('auth_type') || 'REGISTER';
         
-        const flavor = urlParams.get('flavor') || 'professional';
+        // Extraer flavor del state (formato: "flavor_AUTH_TYPE_uniqueId")
+        let flavor = 'professional';
+        if (state) {
+            const stateParts = state.split('_');
+            if (stateParts.length >= 3) {
+                flavor = stateParts[0]; // El primer elemento es el flavor
+            }
+        }
         
         let scheme = 'rezuapp://';
         if (flavor === 'user') {
@@ -21,6 +28,7 @@
         
         console.log("Flavor detectado:", flavor);
         console.log("Scheme usado:", scheme);
+        console.log("State original:", state);
         
         if (code) {
             window.location.href = scheme + 'callback?code=' + code + 
