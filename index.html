@@ -9,11 +9,33 @@
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
+        const error = urlParams.get('error');
         
+        const hostname = window.location.hostname;
+        const path = window.location.pathname;
+        
+        let scheme = 'rezuapp://';
+        
+        if (hostname.includes('user') || path.includes('user')) {
+            scheme = 'rezuappuser://';
+        }
+        
+        const authType = urlParams.get('auth_type') || 'register'; // por defecto register
+        
+        // Construir la URL de redirección
         if (code) {
-            window.location.href = 'rezuapp://callback?code=' + code + '&state=' + state;
+            window.location.href = scheme + 'callback?code=' + code + 
+                                  '&state=' + state + 
+                                  '&auth_type=' + authType;
+        } else if (error) {
+            window.location.href = scheme + 'callback?error=' + error + 
+                                  '&state=' + state + 
+                                  '&auth_type=' + authType;
         } else {
             document.write('Esperando respuesta de LinkedIn...');
+            setTimeout(function() {
+                window.location.href = scheme + 'callback?error=timeout&auth_type=' + authType;
+            }, 5000);
         }
     </script>
 </body>
