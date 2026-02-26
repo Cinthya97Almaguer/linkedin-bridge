@@ -9,13 +9,30 @@
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
-        const scheme = urlParams.get('scheme'); // Recibimos el esquema de la app
         
         if (code) {
-            // Usamos el esquema que nos envió la app
-            window.location.href = scheme + '://callback?code=' + code + '&state=' + state;
+            const parts = state.split('_');
+            const authType = parts[0]; // "REGISTER" o "LOGIN"
+            
+            let scheme = '';
+            
+            if (authType === 'REGISTER') {
+                scheme = 'rezuappregister';
+            } else if (authType === 'LOGIN') {
+                scheme = 'rezuapplogin';
+            } else {
+                scheme = 'rezuapp';
+            }
+            
+            const redirectUrl = scheme + '://callback?code=' + encodeURIComponent(code) + '&state=' + encodeURIComponent(state);
+            
+            console.log('AuthType detectado:', authType);
+            console.log('Redirigiendo a:', redirectUrl);
+            
+            window.location.href = redirectUrl;
         } else {
-            document.write('Esperando respuesta de LinkedIn...');
+            document.write('<h3>Esperando respuesta de LinkedIn...</h3>');
+            document.write('<p>Por favor espera mientras se completa la autenticación.</p>');
         }
     </script>
 </body>
