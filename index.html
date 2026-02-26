@@ -9,9 +9,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
+        const scheme = urlParams.get('scheme'); // Recibimos el esquema de la app
         
         if (code) {
-            window.location.href = 'rezuapp://callback?code=' + code + '&state=' + state;
+            // Usamos el esquema que nos envió la app
+            window.location.href = scheme + '://callback?code=' + code + '&state=' + state;
         } else {
             document.write('Esperando respuesta de LinkedIn...');
         }
